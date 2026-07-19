@@ -1,0 +1,406 @@
+:root {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --brand: #0f766e;
+  --brand-ink: #ffffff;
+  --available: #ecfdf5;
+  --available-border: #6ee7b7;
+  --yours: #0f766e;
+  --unavailable: #e2e8f0;
+  --blocked: #fee2e2;
+  --blocked-border: #fca5a5;
+  --danger: #b91c1c;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+#root {
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.appbar h1 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.appbar a,
+.appbar button {
+  color: var(--brand-ink);
+}
+
+.content {
+  padding: 16px;
+  padding-bottom: 88px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+h2 {
+  font-size: 1.15rem;
+  margin: 0 0 12px;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 16px 0 8px;
+}
+
+button,
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+button.secondary {
+  background: #e2e8f0;
+  color: var(--ink);
+}
+
+button.danger {
+  background: var(--danger);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 12px 0 4px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dow {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding-bottom: 4px;
+}
+
+.day-cell {
+  aspect-ratio: 1 / 1;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  padding: 2px;
+  background: var(--surface);
+}
+
+.day-cell .num {
+  font-weight: 600;
+}
+
+.day-cell .tag {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.day-cell.available {
+  background: var(--available);
+  border-color: var(--available-border);
+  cursor: pointer;
+}
+
+.day-cell.yours {
+  background: var(--yours);
+  color: #fff;
+  cursor: pointer;
+}
+
+.day-cell.unavailable {
+  background: var(--unavailable);
+  color: var(--muted);
+}
+
+.day-cell.blocked {
+  background: var(--blocked);
+  border-color: var(--blocked-border);
+  color: var(--danger);
+}
+
+.day-cell.empty {
+  background: transparent;
+}
+
+.day-cell.past {
+  opacity: 0.35;
+}
+
+.month-title {
+  margin: 16px 0 8px;
+  font-weight: 700;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  display: inline-block;
+}
+
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid #e2e8f0;
+}
+
+.tabbar a {
+  flex: 1;
+  text-align: center;
+  padding: 10px 4px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.tabbar a.active {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.tabbar .badge {
+  background: var(--danger);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  padding: 0 5px;
+  min-width: 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pill {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: var(--ink);
+}
+
+.pill.active {
+  background: var(--available);
+  color: #047857;
+}
+
+.pill.cancelled {
+  background: var(--blocked);
+  color: var(--danger);
+}
+
+.pill.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pill.sent {
+  background: var(--available);
+  color: #047857;
+}
+
+.pill.failed {
+  background: var(--blocked);
+  color: var(--danger);
+}
+
+.error {
+  background: var(--blocked);
+  color: var(--danger);
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.success {
+  background: var(--available);
+  color: #047857;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.center {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+
+.tabs button {
+  min-height: 40px;
+  padding: 8px 12px;
+  background: #e2e8f0;
+  color: var(--ink);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.tabs button.active {
+  background: var(--brand);
+  color: #fff;
+}
+
+.stack {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+dialog {
+  border: none;
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 90%;
+  width: 400px;
+}
+
+dialog::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+.modal h3 {
+  margin-top: 0;
+}

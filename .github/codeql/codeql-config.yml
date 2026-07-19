@@ -1,0 +1,13 @@
+name: "Strict CodeQL config"
+
+queries:
+  - uses: security-and-quality
+
+threat-models:
+  - local
+
+paths-ignore:
+  - node_modules
+  - dist
+  - .wrangler
+  - test-results
