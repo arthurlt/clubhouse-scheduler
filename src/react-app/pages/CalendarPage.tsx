@@ -166,33 +166,45 @@ export function CalendarPage() {
       </div>
 
       {selected && (
-        <div className="card" role="dialog" aria-label="Confirm">
-          <h3>{selected}</h3>
-          {selectedState === "available" ? (
-            <>
-              <p className="muted">Reserve the clubhouse for this full day?</p>
-              <div className="stack">
-                <button onClick={book} disabled={busy}>
-                  {busy ? "Booking…" : "Confirm booking"}
-                </button>
-                <button className="secondary" onClick={() => setSelected(null)}>
-                  Cancel
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="muted">This is your reservation. Release this day?</p>
-              <div className="stack">
-                <button className="danger" onClick={cancel} disabled={busy}>
-                  {busy ? "Cancelling…" : "Cancel reservation"}
-                </button>
-                <button className="secondary" onClick={() => setSelected(null)}>
-                  Keep it
-                </button>
-              </div>
-            </>
-          )}
+        <div
+          className="modal-overlay"
+          role="presentation"
+          onClick={() => !busy && setSelected(null)}
+        >
+          <div
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Reservation for ${selected}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>{selected}</h3>
+            {selectedState === "available" ? (
+              <>
+                <p className="muted">Reserve the clubhouse for this full day?</p>
+                <div className="stack">
+                  <button onClick={book} disabled={busy}>
+                    {busy ? "Booking…" : "Confirm booking"}
+                  </button>
+                  <button className="secondary" onClick={() => setSelected(null)}>
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="muted">This is your reservation. Release this day?</p>
+                <div className="stack">
+                  <button className="danger" onClick={cancel} disabled={busy}>
+                    {busy ? "Cancelling…" : "Cancel reservation"}
+                  </button>
+                  <button className="secondary" onClick={() => setSelected(null)}>
+                    Keep it
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
