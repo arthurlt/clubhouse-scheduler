@@ -7,3 +7,4 @@ dist/
 npm-debug.log*
 node_modules/.tmp/
 .vite/
+test-results/
