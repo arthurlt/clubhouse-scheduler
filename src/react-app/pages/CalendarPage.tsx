@@ -62,7 +62,7 @@ export function CalendarPage() {
     return [...groups.entries()];
   }, [cal]);
 
-  if (error) return <div className="error">{error}</div>;
+  if (!cal && error) return <div className="error">{error}</div>;
   if (!cal) return <div className="center">Loading…</div>;
 
   const selectedState = selected ? cal.days.find((d) => d.day === selected)?.state : null;
