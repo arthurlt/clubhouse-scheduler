@@ -1,0 +1,11 @@
+# Copy to `.dev.vars` for local development. Never commit real secrets.
+# `.dev.vars` overrides `vars` from wrangler.jsonc for `wrangler dev` / `vite`.
+
+# Session signing/entropy (optional; sessions also use per-session random secrets).
+SESSION_SECRET="dev-session-secret-change-me"
+
+# Google OAuth confidential client secret (only needed when DEV_AUTH=false).
+GOOGLE_CLIENT_SECRET=""
+
+# Resend API key (only needed when EMAIL_PROVIDER=resend).
+RESEND_API_KEY=""

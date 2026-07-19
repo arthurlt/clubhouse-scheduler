@@ -1,0 +1,31 @@
+{
+  // Test-only Worker config for @cloudflare/vitest-pool-workers. It mirrors the
+  // default environment of wrangler.jsonc but omits `assets` (not needed for API
+  // tests and unsupported by the test pool's config parser) and queue consumers.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "clubhouse-scheduler-test",
+  "main": "./src/worker/index.ts",
+  "compatibility_date": "2025-08-03",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "APP_BASE_URL": "http://localhost:5173",
+    "GOOGLE_CLIENT_ID": "dev-google-client-id",
+    "BOOTSTRAP_ADMIN_EMAILS": "admin@example.com",
+    "EMAIL_FROM": "Clubhouse Scheduler <no-reply@example.com>",
+    "DEFAULT_TIMEZONE": "America/Denver",
+    "DEFAULT_HORIZON_DAYS": "90",
+    "DEV_AUTH": "true",
+    "EMAIL_PROVIDER": "console"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "clubhouse_scheduler",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "queues": {
+    "producers": [{ "binding": "EMAIL_QUEUE", "queue": "clubhouse-email" }]
+  }
+}
