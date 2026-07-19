@@ -1,0 +1,164 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "clubhouse-scheduler",
+	"main": "./src/worker/index.ts",
+	"compatibility_date": "2025-08-03",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"not_found_handling": "single-page-application",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	"vars": {
+		"APP_BASE_URL": "http://localhost:5173",
+		"GOOGLE_CLIENT_ID": "dev-google-client-id",
+		"BOOTSTRAP_ADMIN_EMAILS": "admin@example.com",
+		"EMAIL_FROM": "Clubhouse Scheduler <no-reply@example.com>",
+		"DEFAULT_TIMEZONE": "America/Denver",
+		"DEFAULT_HORIZON_DAYS": "90",
+		"DEV_AUTH": "true",
+		"EMAIL_PROVIDER": "console"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "clubhouse_scheduler",
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			"migrations_dir": "./migrations"
+		}
+	],
+	"queues": {
+		"producers": [
+			{
+				"binding": "EMAIL_QUEUE",
+				"queue": "clubhouse-email"
+			}
+		],
+		"consumers": [
+			{
+				"queue": "clubhouse-email",
+				"max_batch_size": 10,
+				"max_batch_timeout": 5,
+				"max_retries": 3,
+				"dead_letter_queue": "clubhouse-email-dlq"
+			},
+			{
+				"queue": "clubhouse-email-dlq",
+				"max_batch_size": 10,
+				"max_batch_timeout": 5,
+				"max_retries": 1
+			}
+		]
+	},
+	"triggers": {
+		"crons": [
+			"*/5 * * * *"
+		]
+	},
+	"env": {
+		"staging": {
+			"name": "clubhouse-scheduler-staging",
+			"vars": {
+				"APP_BASE_URL": "https://clubhouse-scheduler-staging.arthur-domains.workers.dev/signin",
+				"GOOGLE_CLIENT_ID": "515267252087-7i9spd2jbkla4f2n3hv4ledd3losoeoo.apps.googleusercontent.com",
+				"BOOTSTRAP_ADMIN_EMAILS": "arthurlt@gmail.com",
+				"EMAIL_FROM": "Clubhouse Scheduler <no-reply@scheduler.antiprism.xyz>",
+				"DEFAULT_TIMEZONE": "America/Denver",
+				"DEFAULT_HORIZON_DAYS": "180",
+				"DEV_AUTH": "false",
+				"EMAIL_PROVIDER": "resend"
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "clubhouse_scheduler_staging",
+					"database_id": "4e591e62-c974-4168-9c10-214d793a3e63",
+					"migrations_dir": "./migrations"
+				}
+			],
+			"queues": {
+				"producers": [
+					{
+						"binding": "EMAIL_QUEUE",
+						"queue": "clubhouse-email-staging"
+					}
+				],
+				"consumers": [
+					{
+						"queue": "clubhouse-email-staging",
+						"max_batch_size": 10,
+						"max_batch_timeout": 5,
+						"max_retries": 3,
+						"dead_letter_queue": "clubhouse-email-dlq-staging"
+					},
+					{
+						"queue": "clubhouse-email-dlq-staging",
+						"max_batch_size": 10,
+						"max_batch_timeout": 5,
+						"max_retries": 1
+					}
+				]
+			},
+			"triggers": {
+				"crons": [
+					"*/5 * * * *"
+				]
+			}
+		},
+		"production": {
+			"name": "clubhouse-scheduler-production",
+			"vars": {
+				"APP_BASE_URL": "https://clubhouse.example.com",
+				"GOOGLE_CLIENT_ID": "",
+				"BOOTSTRAP_ADMIN_EMAILS": "",
+				"EMAIL_FROM": "Clubhouse Scheduler <no-reply@example.com>",
+				"DEFAULT_TIMEZONE": "America/Denver",
+				"DEFAULT_HORIZON_DAYS": "90",
+				"DEV_AUTH": "false",
+				"EMAIL_PROVIDER": "resend"
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "clubhouse_scheduler_production",
+					"database_id": "00000000-0000-0000-0000-000000000000",
+					"migrations_dir": "./migrations"
+				}
+			],
+			"queues": {
+				"producers": [
+					{
+						"binding": "EMAIL_QUEUE",
+						"queue": "clubhouse-email-production"
+					}
+				],
+				"consumers": [
+					{
+						"queue": "clubhouse-email-production",
+						"max_batch_size": 10,
+						"max_batch_timeout": 5,
+						"max_retries": 3,
+						"dead_letter_queue": "clubhouse-email-dlq-production"
+					},
+					{
+						"queue": "clubhouse-email-dlq-production",
+						"max_batch_size": 10,
+						"max_batch_timeout": 5,
+						"max_retries": 1
+					}
+				]
+			},
+			"triggers": {
+				"crons": [
+					"*/5 * * * *"
+				]
+			}
+		}
+	}
+}
