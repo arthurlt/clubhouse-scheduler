@@ -66,8 +66,14 @@ Staging and production are separate Wrangler environments with distinct Worker
 names, D1 databases, and queues (see `wrangler.jsonc`).
 
 ```bash
-# One-time per environment: create D1 + queues, set database_id in wrangler.jsonc,
+# One-time per environment: create D1 + queues, paste database_id into
+# env.staging / env.production in wrangler.jsonc (not the top-level block),
 # and set secrets (SESSION_SECRET, GOOGLE_CLIENT_SECRET, RESEND_API_KEY):
+wrangler d1 create clubhouse_scheduler_staging   # skip if it already exists
+wrangler d1 info clubhouse_scheduler_staging     # copy database_id into wrangler.jsonc
+wrangler queues create clubhouse-email-staging
+wrangler queues create clubhouse-email-dlq-staging
+wrangler secret put SESSION_SECRET --env staging
 wrangler secret put GOOGLE_CLIENT_SECRET --env staging
 wrangler secret put RESEND_API_KEY --env staging
 

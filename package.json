@@ -14,8 +14,8 @@
     "test:watch": "vitest",
     "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply clubhouse_scheduler --local",
-    "db:migrate:staging": "wrangler d1 migrations apply clubhouse_scheduler --env staging --remote",
-    "db:migrate:production": "wrangler d1 migrations apply clubhouse_scheduler --env production --remote",
+    "db:migrate:staging": "wrangler d1 migrations apply clubhouse_scheduler_staging --env staging --remote",
+    "db:migrate:production": "wrangler d1 migrations apply clubhouse_scheduler_production --env production --remote",
     "db:seed:local": "wrangler d1 execute clubhouse_scheduler --local --file=./scripts/seed.sql",
     "deploy:staging": "npm run build && wrangler deploy --env staging",
     "deploy:production": "npm run build && wrangler deploy --env production"
