@@ -5,12 +5,14 @@ import { api, ApiError } from "../api";
 
 export function MyBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [today, setToday] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const r = await api.myBookings();
-    setBookings(r.bookings);
+    const [cal, mine] = await Promise.all([api.calendar(), api.myBookings()]);
+    setToday(cal.today);
+    setBookings(mine.bookings);
   }, []);
 
   useEffect(() => {
@@ -18,8 +20,6 @@ export function MyBookings() {
       setError(err instanceof ApiError ? err.message : "Failed to load"),
     );
   }, [load]);
-
-  const today = new Date().toISOString().slice(0, 10);
 
   async function cancel(id: string) {
     setBusy(id);
@@ -53,7 +53,7 @@ export function MyBookings() {
               </div>
             )}
           </div>
-          {b.status === "active" && b.day >= today && (
+          {today && b.status === "active" && b.day >= today && (
             <button
               className="danger"
               onClick={() => cancel(b.id)}

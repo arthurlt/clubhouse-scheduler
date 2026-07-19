@@ -165,7 +165,7 @@ export function requireApproved(c: Context<HonoEnv>): SessionUser {
 
 export function requireAdmin(c: Context<HonoEnv>): SessionUser {
   const user = requireUser(c);
-  if (!user.isAdmin || user.status === "suspended") {
+  if (!user.isAdmin || user.status !== "approved") {
     throw new HttpError(403, "forbidden", "Admin access required");
   }
   return user;
