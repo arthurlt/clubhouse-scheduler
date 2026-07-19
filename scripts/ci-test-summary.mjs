@@ -1,17 +1,41 @@
 #!/usr/bin/env node
 /**
- * Parse Vitest JUnit XML and write a GitHub Actions Job Summary.
- * When GITHUB_STEP_SUMMARY is unset (local smoke-test), prints Markdown to stdout.
+ * Parse Vitest JUnit XML and write Markdown for a GitHub Actions Job Summary.
+ * Writes to stdout only — the workflow appends that output to $GITHUB_STEP_SUMMARY.
  */
-import { appendFileSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
-const junitPath = process.env.JUNIT_PATH ?? "test-results/junit.xml";
+const JUNIT_PATH = "test-results/junit.xml";
 
+/** Attribute names we read from Vitest JUnit XML. */
+const ATTRS = Object.freeze({
+  name: "name",
+  tests: "tests",
+  failures: "failures",
+  errors: "errors",
+  skipped: "skipped",
+  time: "time",
+  classname: "classname",
+  message: "message",
+});
+
+/**
+ * @param {string} tag
+ * @returns {Record<string, string>}
+ */
 function parseAttrs(tag) {
   /** @type {Record<string, string>} */
   const attrs = {};
   for (const match of tag.matchAll(/(\w+)="([^"]*)"/g)) {
-    attrs[match[1]] = match[2];
+    const key = match[1];
+    if (key === ATTRS.name) attrs.name = match[2];
+    else if (key === ATTRS.tests) attrs.tests = match[2];
+    else if (key === ATTRS.failures) attrs.failures = match[2];
+    else if (key === ATTRS.errors) attrs.errors = match[2];
+    else if (key === ATTRS.skipped) attrs.skipped = match[2];
+    else if (key === ATTRS.time) attrs.time = match[2];
+    else if (key === ATTRS.classname) attrs.classname = match[2];
+    else if (key === ATTRS.message) attrs.message = match[2];
   }
   return attrs;
 }
@@ -31,30 +55,21 @@ function formatSeconds(raw) {
   return `${n.toFixed(2)}s`;
 }
 
-function writeSummary(markdown) {
-  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-  if (summaryPath) {
-    appendFileSync(summaryPath, markdown, "utf8");
-  } else {
-    process.stdout.write(markdown);
-  }
-}
-
 function noResults(reason) {
-  writeSummary(`## Test results\n\n_${reason}_\n`);
+  process.stdout.write(`## Test results\n\n_${reason}_\n`);
   process.exit(0);
 }
 
 let xml;
 try {
-  xml = readFileSync(junitPath, "utf8");
+  xml = readFileSync(JUNIT_PATH, "utf8");
 } catch {
-  noResults(`No JUnit report found at \`${junitPath}\`.`);
+  noResults(`No JUnit report found at \`${JUNIT_PATH}\`.`);
 }
 
 const rootMatch = xml.match(/<testsuites\b([^>]*)>/);
 if (!rootMatch) {
-  noResults(`JUnit report at \`${junitPath}\` could not be parsed.`);
+  noResults(`JUnit report at \`${JUNIT_PATH}\` could not be parsed.`);
 }
 
 const root = parseAttrs(rootMatch[1]);
@@ -141,4 +156,4 @@ if (failures.length > 0) {
   }
 }
 
-writeSummary(`${lines.join("\n")}\n`);
+process.stdout.write(`${lines.join("\n")}\n`);

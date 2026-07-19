@@ -46,7 +46,7 @@ jobs:
 
       - name: Write test summary
         if: always()
-        run: node scripts/ci-test-summary.mjs
+        run: node scripts/ci-test-summary.mjs >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload test results
         if: always()
