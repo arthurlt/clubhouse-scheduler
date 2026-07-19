@@ -66,9 +66,21 @@ admin.post("/members/:id/approve", async (c) => {
 admin.post("/members/:id/reject", async (c) => {
   const actor = requireAdmin(c);
   const id = c.req.param("id");
+  // Last-admin before self so rejecting the sole admin (including self) yields
+  // 409 last_admin rather than a generic self error.
+  await ensureNotLastAdminIfAdmin(c.env, id);
+  if (id === actor.id) throw new HttpError(400, "self", "You cannot reject yourself");
   const body = await readJson<{ reason?: string }>(c);
   const reason = (body.reason ?? "").trim() || "Not eligible";
-  await setStatus(c.env, id, "rejected", reason);
+  const target = await c.env.DB.prepare("SELECT id FROM users WHERE id = ?")
+    .bind(id)
+    .first<{ id: string }>();
+  if (!target) throw new HttpError(404, "not_found", "User not found");
+  await c.env.DB.prepare(
+    "UPDATE users SET status = 'rejected', rejection_reason = ?, is_admin = 0, updated_at = ? WHERE id = ?",
+  )
+    .bind(reason, nowIso(), id)
+    .run();
   await c.env.DB.prepare("DELETE FROM sessions WHERE user_id = ?").bind(id).run();
   await writeAudit(c.env, {
     actorUserId: actor.id,
